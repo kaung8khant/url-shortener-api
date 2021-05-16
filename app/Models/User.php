@@ -40,21 +40,6 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->created_by = Auth::guard('users')->user()->id;
-            $model->updated_by = Auth::guard('users')->user()->id;
-        });
-
-        static::updating(function ($model) {
-            $model->updated_by = Auth::guard('users')->user()->id;
-        });
-    }
-
     public function getJWTIdentifier()
     {
         return $this->getKey();
