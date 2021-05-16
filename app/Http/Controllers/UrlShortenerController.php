@@ -6,6 +6,7 @@ use App\Helpers\ResponseHelper;
 use App\Helpers\UrlHelper;
 use App\Models\UrlShort;
 use App\Rules\Blacklist;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -40,8 +41,15 @@ class UrlShortenerController extends Controller
 
     public function shortenLink($code)
     {
-        $url = UrlShort::where('code', $code)->first();
+        $url = UrlShort::withTrashed()->where('code', $code)->first();
         $url->hit = (int) $url->hit + 1;
+
+        if ($url->deleted_at) {
+            return ResponseHelper::generateResponse("Link deleted", 410, true);
+        }
+        if ($url->expired_at < Carbon::now()) {
+            return ResponseHelper::generateResponse("Link expired", 410, true);
+        }
         $url->save();
         return ResponseHelper::generateResponse($url, 201);
     }

@@ -14,7 +14,8 @@ class UrlController extends Controller
 
     public function index(Request $request)
     {
-        $url = UrlShort::where('code', 'like', '%' . $request->filter . '%')->get();
+        $url = UrlShort::where('code', 'like', '%' . $request->filter . '%')->
+            orWhere('link', 'like', '%' . $request->filter . '%')->get();
 
         return ResponseHelper::generateResponse($url, 200);
     }
