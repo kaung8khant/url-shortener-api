@@ -19,3 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('shorten', 'UrlShortenerController@store');
 Route::get('link/{code}', 'UrlShortenerController@shortenLink');
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::post('login', 'Auth\AdminAuthController@login');
+});

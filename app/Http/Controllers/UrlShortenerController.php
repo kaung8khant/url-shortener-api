@@ -21,7 +21,7 @@ class UrlShortenerController extends Controller
         ]));
 
         if ($validator->fails()) {
-            return $this->generateResponse($validator->errors()->first(), 422);
+            return $this->generateResponse($validator->errors()->first(), 422, true);
         }
 
         if (!UrlHelper::verifyUrlExists($request->link)) {
@@ -33,7 +33,7 @@ class UrlShortenerController extends Controller
 
         $data = UrlShort::create($input);
 
-        return ResponseHelper::generateResponse($data, 401);
+        return ResponseHelper::generateResponse($data, 201);
     }
 
     public function shortenLink($code)
@@ -41,6 +41,6 @@ class UrlShortenerController extends Controller
         $url = UrlShort::where('code', $code)->first();
         $url->hit = (int) $url->hit + 1;
         $url->save();
-        return ResponseHelper::generateResponse($url, 401);
+        return ResponseHelper::generateResponse($url, 201);
     }
 }
