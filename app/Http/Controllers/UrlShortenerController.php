@@ -8,10 +8,12 @@ use App\Models\UrlShort;
 use App\Rules\Blacklist;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 
 class UrlShortenerController extends Controller
 {
+
     use UrlHelper, ResponseHelper;
 
     public function store(Request $request)
@@ -41,7 +43,12 @@ class UrlShortenerController extends Controller
 
     public function shortenLink($code)
     {
-        $url = UrlShort::withTrashed()->where('code', $code)->first();
+
+        // cache is remember in seconds in second parameter
+        $url = Cache::remember('url', 33600, function () use ($code) {
+            return UrlShort::withTrashed()->where('code', $code)->first();
+        });
+
         $url->hit = (int) $url->hit + 1;
 
         if ($url->deleted_at) {
