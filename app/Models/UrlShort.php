@@ -13,7 +13,7 @@ class UrlShort extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'code', 'link',
+        'code', 'link', 'expired_at',
     ];
 
     protected $guarded = ['id'];

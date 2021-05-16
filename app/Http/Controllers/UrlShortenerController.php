@@ -18,6 +18,7 @@ class UrlShortenerController extends Controller
 
         $validator = Validator::make($request->all(), ([
             'link' => ['required', 'url', new Blacklist],
+            'expired_at' => 'nullable|date',
         ]));
 
         if ($validator->fails()) {
@@ -29,6 +30,7 @@ class UrlShortenerController extends Controller
         }
 
         $input['link'] = $request->link;
+        $input['expired_at'] = $request->expired_at;
         $input['code'] = UrlHelper::generateUniqueSlug();
 
         $data = UrlShort::create($input);
