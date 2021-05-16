@@ -18,7 +18,4 @@ class UrlShort extends Model
 
     protected $guarded = ['id'];
 
-    protected $hidden = [
-        'id',
-    ];
 }

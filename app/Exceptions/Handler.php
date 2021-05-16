@@ -37,5 +37,14 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+        $this->renderable(function (Throwable $e) {
+            if ($e instanceof NotFoundHttpException) {
+                return response()->json(['message' => 'Request not found.', 'status' => 404], 404);
+            }
+
+            if ($e instanceof MethodNotAllowedHttpException) {
+                return response()->json(['message' => $e->getMessage(), 'status' => 405], 405);
+            }
+        });
     }
 }

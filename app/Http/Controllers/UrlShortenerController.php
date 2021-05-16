@@ -43,4 +43,5 @@ class UrlShortenerController extends Controller
         $url->save();
         return ResponseHelper::generateResponse($url, 201);
     }
+
 }
